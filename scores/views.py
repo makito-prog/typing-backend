@@ -1,16 +1,8 @@
-from django.http import JsonResponse
+from rest_framework import generics
 from .models import Score
+from .serializers import ScoreSerializer
 
-def ranking(request):
-    scores = Score.objects.order_by("-wpm")[:10]
-    data = [
-        {
-            "id": s.id,
-            "player_name": s.player_name,
-            "wpm": s.wpm,
-            "accuracy": s.accuracy,
-            "created_at": s.created_at,
-        }
-        for s in scores
-    ]
-    return JsonResponse(data, safe=False)
+
+class ScoreListCreateView(generics.ListCreateAPIView):
+    queryset = Score.objects.order_by("-wpm")[:10]
+    serializer_class = ScoreSerializer
